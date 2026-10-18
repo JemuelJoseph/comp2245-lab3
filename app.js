@@ -8,7 +8,7 @@ const fruits = [
   { name: "pineapple", symbol: "🍍" },
   { name: "watermelon", symbol: "🍉" },
 ];
- 
+
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -16,22 +16,22 @@ function shuffle(array) {
   }
   return array;
 }
- 
+
 const board = document.querySelector("#board");
 const movesDisplay = document.querySelector("#moves");
 const status = document.querySelector("#status");
 const newGameButton = document.querySelector("#new-game");
- 
-let deck = [];          
-let turnedCards = [];   
+
+let deck = [];
+let turnedCards = [];
 let moves = 0;
 let pairsFound = 0;
-let waiting = false;    
-let timerId = null;     
- 
+let waiting = false;
+let timerId = null;
+
 function buildBoard() {
   deck = shuffle([...fruits, ...fruits]);
- 
+
   for (let i = 0; i < deck.length; i++) {
     const card = document.createElement("button");
     card.type = "button";
@@ -41,36 +41,6 @@ function buildBoard() {
     board.appendChild(card);
   }
 }
-
-function buildBoard() {
-  deck = shuffle([...fruits, ...fruits]);
- 
-  for (let i = 0; i < deck.length; i++) {
-    const card = document.createElement("button");
-    card.type = "button";
-    card.classList.add("card");
-    card.setAttribute("aria-label", `Card ${i + 1}, face down`);
-    card.dataset.index = i;
-    board.appendChild(card);
-  }
-}
-
-function checkForMatch() {
-  moves++;
-  movesDisplay.textContent = moves;
- 
-  const [first, second] = turnedCards;
-  const firstFruit = deck[Number(first.dataset.index)];
-  const secondFruit = deck[Number(second.dataset.index)];
- 
-  if (firstFruit.name === secondFruit.name) {
-    first.classList.add("matched");
-    second.classList.add("matched");
-    first.disabled = true;
-    second.disabled = true;
-    status.textContent = "That's a pair!";
-    turnedCards = [];
-    pairsFound++;
 
 function turnFaceUp(card) {
   const index = Number(card.dataset.index);
@@ -79,6 +49,30 @@ function turnFaceUp(card) {
   card.classList.add("flipped");
   card.setAttribute("aria-label", `Card ${index + 1}, ${fruit.name}`);
 }
+
+function turnFaceDown(card) {
+  const index = Number(card.dataset.index);
+  card.textContent = "";
+  card.classList.remove("flipped");
+  card.setAttribute("aria-label", `Card ${index + 1}, face down`);
+}
+
+function checkForMatch() {
+  moves++;
+  movesDisplay.textContent = moves;
+
+  const [first, second] = turnedCards;
+  const firstFruit = deck[Number(first.dataset.index)];
+  const secondFruit = deck[Number(second.dataset.index)];
+
+  if (firstFruit.name === secondFruit.name) {
+    first.classList.add("matched");
+    second.classList.add("matched");
+    first.disabled = true;
+    second.disabled = true;
+    status.textContent = "That's a pair!";
+    turnedCards = [];
+    pairsFound++;
 
     if (pairsFound === fruits.length) {
       status.textContent = `You found all the pairs in ${moves} moves!`;
@@ -98,18 +92,31 @@ function turnFaceUp(card) {
 
 board.addEventListener("click", function (event) {
   const card = event.target;
- 
-  if (!card.classList.contains("card")) return;   
-  if (waiting) return;                            
-  if (card.classList.contains("flipped")) return; 
- 
+
+  if (!card.classList.contains("card")) return;
+  if (waiting) return;
+  if (card.classList.contains("flipped")) return;
+
   turnFaceUp(card);
   turnedCards.push(card);
- 
+
   if (turnedCards.length === 2) {
     checkForMatch();
   }
 });
+
+function newGame() {
+  clearTimeout(timerId);
+  waiting = false;
+  turnedCards = [];
+  moves = 0;
+  pairsFound = 0;
+  movesDisplay.textContent = moves;
+  status.textContent = "Turn over two cards to find a matching pair.";
+  status.classList.remove("you-won");
+  board.replaceChildren();
+  buildBoard();
+}
 
 newGameButton.addEventListener("click", newGame);
 

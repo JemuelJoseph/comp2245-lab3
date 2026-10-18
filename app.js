@@ -54,3 +54,13 @@ function buildBoard() {
     board.appendChild(card);
   }
 }
+
+function turnFaceUp(card) {
+  const index = Number(card.dataset.index);
+  const fruit = deck[index];
+  card.textContent = fruit.symbol;
+  card.classList.add("flipped");
+  card.setAttribute("aria-label", `Card ${index + 1}, ${fruit.name}`);
+}
+
+buildBoard();

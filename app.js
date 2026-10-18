@@ -41,3 +41,16 @@ function buildBoard() {
     board.appendChild(card);
   }
 }
+
+function buildBoard() {
+  deck = shuffle([...fruits, ...fruits]);
+ 
+  for (let i = 0; i < deck.length; i++) {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.classList.add("card");
+    card.setAttribute("aria-label", `Card ${i + 1}, face down`);
+    card.dataset.index = i;
+    board.appendChild(card);
+  }
+}

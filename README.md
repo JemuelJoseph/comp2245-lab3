@@ -2,3 +2,7 @@
 
 This is Lab 3 for Jemuel Joseph.
 
+
+
+Tested in Chrome
+

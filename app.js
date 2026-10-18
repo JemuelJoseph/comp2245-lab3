@@ -55,6 +55,23 @@ function buildBoard() {
   }
 }
 
+function checkForMatch() {
+  moves++;
+  movesDisplay.textContent = moves;
+ 
+  const [first, second] = turnedCards;
+  const firstFruit = deck[Number(first.dataset.index)];
+  const secondFruit = deck[Number(second.dataset.index)];
+ 
+  if (firstFruit.name === secondFruit.name) {
+    first.classList.add("matched");
+    second.classList.add("matched");
+    first.disabled = true;
+    second.disabled = true;
+    status.textContent = "That's a pair!";
+    turnedCards = [];
+    pairsFound++;
+
 function turnFaceUp(card) {
   const index = Number(card.dataset.index);
   const fruit = deck[index];
@@ -62,5 +79,7 @@ function turnFaceUp(card) {
   card.classList.add("flipped");
   card.setAttribute("aria-label", `Card ${index + 1}, ${fruit.name}`);
 }
+
+newGameButton.addEventListener("click", newGame);
 
 buildBoard();

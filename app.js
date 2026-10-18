@@ -96,6 +96,21 @@ function turnFaceUp(card) {
   }
 }
 
+board.addEventListener("click", function (event) {
+  const card = event.target;
+ 
+  if (!card.classList.contains("card")) return;   
+  if (waiting) return;                            
+  if (card.classList.contains("flipped")) return; 
+ 
+  turnFaceUp(card);
+  turnedCards.push(card);
+ 
+  if (turnedCards.length === 2) {
+    checkForMatch();
+  }
+});
+
 newGameButton.addEventListener("click", newGame);
 
 buildBoard();

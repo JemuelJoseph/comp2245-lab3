@@ -80,6 +80,22 @@ function turnFaceUp(card) {
   card.setAttribute("aria-label", `Card ${index + 1}, ${fruit.name}`);
 }
 
+    if (pairsFound === fruits.length) {
+      status.textContent = `You found all the pairs in ${moves} moves!`;
+      status.classList.add("you-won");
+    }
+  } else {
+    status.textContent = "Not a pair. Try again.";
+    waiting = true;
+    timerId = setTimeout(function () {
+      turnFaceDown(first);
+      turnFaceDown(second);
+      turnedCards = [];
+      waiting = false;
+    }, 1000);
+  }
+}
+
 newGameButton.addEventListener("click", newGame);
 
 buildBoard();
